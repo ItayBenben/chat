@@ -7,7 +7,7 @@ The server asks for username of client and user\chat name to connect to.
 
 ## Download
 Run the following command in your terminal to save the repository in your system
-> $ git clone --
+> $ git clone https://github.com/ItayBenben/chat.git
 
 ## Run
 ### Server
