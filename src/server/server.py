@@ -100,7 +100,7 @@ class ChatServer:
             room.add_member(user_id)
             send_to_client(client_socket, f"Joined room {room_id}\n")
             for message in room.get_recent_messages(recent_messages_count):
-                send_to_client(client_socket, message.format())
+                send_to_client(client_socket, str(message))
             return room_id, None
 
         elif cmd == '/private':
@@ -113,7 +113,7 @@ class ChatServer:
             send_to_client(client_socket, f"Started private chat with {other_user_id}\n")
             for message in self.chat_manager.get_or_create_private_chat(user_id, other_user_id).get_recent_messages(
                     recent_messages_count):
-                send_to_client(client_socket, message.format())
+                send_to_client(client_socket, str(message))
             return None, other_user_id
 
         elif cmd == '/quit':
@@ -132,12 +132,11 @@ class ChatServer:
         room = self.chat_manager.rooms.get(room_id)
         if room:
             room.add_message(message)
-            formatted_message = message.format()
 
             for member_id in room.members:
                 if member_id != sender_id:
                     for socket in self.chat_manager.user_sessions.get(member_id, set()):
-                        send_to_client(socket, formatted_message)
+                        send_to_client(socket, str(message))
 
     def send_private_message(self, content: str, sender_id: str, recipient_id: str) -> None:
         message = Message(
@@ -150,10 +149,9 @@ class ChatServer:
 
         chat = self.chat_manager.get_or_create_private_chat(sender_id, recipient_id)
         chat.add_message(message)
-        formatted_message = message.format()
 
         for socket in self.chat_manager.user_sessions.get(recipient_id, set()):
-            send_to_client(socket, formatted_message)
+            send_to_client(socket, str(message))
 
 
 """

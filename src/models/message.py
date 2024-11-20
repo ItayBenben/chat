@@ -17,6 +17,6 @@ class Message:
     message_type: MessageType
     recipient_id: Optional[str] = None
 
-    def format(self) -> str:
+    def __str__(self) -> str:
         time_str = self.timestamp.strftime("%H:%M:%S")
         return f"[{time_str}] {self.sender_id}: {self.content}\n"
