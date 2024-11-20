@@ -152,10 +152,3 @@ class ChatServer:
 
         for socket in self.chat_manager.user_sessions.get(recipient_id, set()):
             send_to_client(socket, str(message))
-
-
-"""
-if __name__ == "__main__":
-    server = ChatServer()
-    server.start()
-"""
