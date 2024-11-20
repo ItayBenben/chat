@@ -1,1 +1,1 @@
-from .client import client_main
+from .client import ChatClient
