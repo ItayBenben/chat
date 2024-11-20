@@ -1,19 +1,17 @@
 from collections import deque
 from typing import Set, List
 
-from src.models import Message, MessageType
+from src.models import Message
 
 
 class ChatRoom:
-    def __init__(self, room_id: str, name: str, history_size: int = 100):
-        self.room_id = room_id
-        self.name = name
+    def __init__(self, chat_id: str, history_size: int = 100):
+        self.id = chat_id
         self.messages = deque(maxlen=history_size)
         self.members: Set[str] = set()
 
     def add_message(self, message: Message) -> None:
-        if message.message_type == MessageType.GROUP:
-            self.messages.append(message)
+        self.messages.append(message)
 
     def get_recent_messages(self, count: int) -> List[Message]:
         return list(self.messages)[-count:]

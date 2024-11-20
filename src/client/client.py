@@ -2,8 +2,14 @@ import socket
 import sys
 import threading
 import time
+from enum import Enum
 
 import typer
+
+
+class ChatType(str, Enum):
+    PUBLIC = "public"
+    PRIVATE = "private"
 
 
 class ChatClient:
@@ -27,10 +33,15 @@ class ChatClient:
                 self.socket.close()
                 sys.exit()
 
-    def start(self) -> None:
+    def send_login_details(self, user_name: str, chat_type: ChatType, target: str, history_length: int) -> None:
+        self.socket.send(f"/login/{user_name}/{chat_type.value}/{target}/{history_length}".encode())
+
+    def start(self, user_name: str, chat_type: ChatType, target: str, history_length: int) -> None:
         receive_thread = threading.Thread(target=self.receive_messages)
         receive_thread.daemon = True
         receive_thread.start()
+
+        self.send_login_details(user_name, chat_type, target, history_length)
 
         while True:
             try:
@@ -51,13 +62,20 @@ class ChatClient:
         self.socket.close()
 
 
-def client_main(host: str, port: int):
+def run_client(
+        host: str = typer.Option(..., "--host", "-h", help="Server host address"),
+        port: int = typer.Option(..., "--port", "-p", help="Server port"),
+        user_name: str = typer.Option(..., "--name", "-n", help="Your username"),
+        chat_type: ChatType = typer.Option(..., "--type", "-ty", help="Chat type: public or private"),
+        target: str = typer.Option(..., "--target", "-ta",
+                                   help="Chat room name for public mode or username for private mode"),
+        history_length: int = typer.Option(10, "--length", "-len", help="Number of messages to retrieve")):
     try:
         client = ChatClient(host, port)
-        client.start()
+        client.start(user_name, chat_type, target, history_length)
     except (socket.timeout, ConnectionRefusedError) as e:
         print(f"Connection to server failed: {e}")
 
 
 if __name__ == "__main__":
-    typer.run(client_main)
+    typer.run(run_client)

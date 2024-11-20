@@ -5,8 +5,8 @@ from typing import Optional
 
 
 class MessageType(Enum):
-    GROUP = "GROUP"
-    PRIVATE = "PRIVATE"
+    PUBLIC = "public"
+    PRIVATE = "private"
 
 
 @dataclass
@@ -14,7 +14,6 @@ class Message:
     content: str
     sender_id: str
     timestamp: datetime
-    message_type: MessageType
     recipient_id: Optional[str] = None
 
     def __str__(self) -> str:
