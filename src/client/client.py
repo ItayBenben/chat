@@ -51,7 +51,7 @@ class ChatClient:
         self.socket.close()
 
 
-def main(host: str, port: int):
+def client(host: str, port: int):
     try:
         client = ChatClient(host, port)
         client.start()
@@ -60,4 +60,4 @@ def main(host: str, port: int):
 
 
 if __name__ == "__main__":
-    typer.run(main)
+    typer.run(client)
