@@ -33,7 +33,6 @@ class PrivateChatRoom(ChatRoom):
 
     def add_member(self, user_id: str) -> None:
         if len(self.members) >= 2:
-            print("Invalid member insertion")
             logger.error(f"Invalid member {user_id} insertion")
             raise ValueError
         logger.info(f"Successfully added {user_id} as member")
